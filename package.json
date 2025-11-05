@@ -1,6 +1,6 @@
 {
   "name": "remark-shiki-highlight-api",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Remark plugin for shiki-highlight-api - replaces traditional Shiki code blocks with CSS Custom Highlight API",
   "keywords": [
     "remark",
