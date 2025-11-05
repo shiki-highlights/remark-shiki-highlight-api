@@ -1,0 +1,59 @@
+{
+  "name": "remark-shiki-highlight-api",
+  "version": "0.1.0",
+  "description": "Remark plugin for shiki-highlight-api - replaces traditional Shiki code blocks with CSS Custom Highlight API",
+  "keywords": [
+    "remark",
+    "remark-plugin",
+    "shiki",
+    "syntax-highlighting",
+    "highlight-api",
+    "markdown",
+    "mdx"
+  ],
+  "author": "Steve Hill <steve@stevehill.xyz>",
+  "license": "MIT",
+  "homepage": "https://github.com/stevehill1981/remark-shiki-highlight-api#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stevehill1981/remark-shiki-highlight-api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/stevehill1981/remark-shiki-highlight-api/issues"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"Tests coming soon\" && exit 0"
+  },
+  "dependencies": {
+    "shiki-highlight-api": "^0.1.0",
+    "unist-util-visit": "^5.0.0"
+  },
+  "peerDependencies": {
+    "unified": ">=10.0.0"
+  },
+  "devDependencies": {
+    "@types/mdast": "^4.0.0",
+    "@types/node": "^20.0.0",
+    "mdast": "^3.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  }
+}
