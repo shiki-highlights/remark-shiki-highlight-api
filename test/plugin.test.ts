@@ -147,4 +147,69 @@ const y: number = 100;
     expect(html).toContain('<style');
     expect(html).toContain('::highlight(');
   });
+
+  it('processes Rust code blocks', async () => {
+    const markdown = '```rust\nfn main() {\n    println!("Hello");\n}\n```';
+
+    const result = await unified()
+      .use(remarkParse)
+      .use(remarkHighlightApi)
+      .use(remarkRehype, { allowDangerousHtml: true })
+      .use(rehypeStringify, { allowDangerousHtml: true })
+      .process(markdown);
+
+    const html = String(result);
+
+    expect(html).toContain('fn main()');
+    expect(html).toContain('println!');
+    expect(html).toContain('<style');
+  });
+
+  it('processes Go code blocks', async () => {
+    const markdown = '```go\nfunc main() {\n    fmt.Println("Hello")\n}\n```';
+
+    const result = await unified()
+      .use(remarkParse)
+      .use(remarkHighlightApi)
+      .use(remarkRehype, { allowDangerousHtml: true })
+      .use(rehypeStringify, { allowDangerousHtml: true })
+      .process(markdown);
+
+    const html = String(result);
+
+    expect(html).toContain('func main()');
+    expect(html).toContain('fmt.Println');
+    expect(html).toContain('<style');
+  });
+
+  it('processes multiple different languages in one document', async () => {
+    const markdown = `
+\`\`\`javascript
+const x = 42;
+\`\`\`
+
+\`\`\`python
+def hello():
+    pass
+\`\`\`
+
+\`\`\`rust
+fn main() {}
+\`\`\`
+`;
+
+    const result = await unified()
+      .use(remarkParse)
+      .use(remarkHighlightApi)
+      .use(remarkRehype, { allowDangerousHtml: true })
+      .use(rehypeStringify, { allowDangerousHtml: true })
+      .process(markdown);
+
+    const html = String(result);
+
+    // Should process all three languages
+    expect(html).toContain('const x = 42;');
+    expect(html).toContain('def hello():');
+    expect(html).toContain('fn main()');
+  });
 });
