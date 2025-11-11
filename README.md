@@ -50,9 +50,42 @@ export default defineConfig({
 });
 ```
 
+### Automatic Language Loading
+
+All Shiki bundled languages load automatically when detected in your markdown. No configuration needed for common languages like Python, Rust, Go, PHP, Ruby, etc.
+
+```javascript
+// astro.config.mjs - works out of the box
+import { remarkHighlightApi } from 'remark-shiki-highlight-api';
+
+export default defineConfig({
+  markdown: {
+    remarkPlugins: [remarkHighlightApi],
+    syntaxHighlight: false,
+  },
+});
+```
+
+Then in your markdown:
+
+````markdown
+```python
+def hello():
+    print("world")
+```
+
+```rust
+fn main() {
+    println!("Hello");
+}
+```
+````
+
+Both blocks will highlight automatically.
+
 ### With Custom Languages
 
-If you need to load custom TextMate grammars:
+For custom TextMate grammars not included in Shiki:
 
 ```javascript
 // custom-languages.js
@@ -88,7 +121,7 @@ export default defineConfig({
 });
 ```
 
-The `loadLanguages` function will be called once before processing any code blocks.
+The `loadLanguages` callback runs once before processing any code blocks.
 
 ## Options
 
