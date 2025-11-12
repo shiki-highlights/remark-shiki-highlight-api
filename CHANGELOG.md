@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.2] - 2025-01-12
+
+### Fixed
+
+- **Critical**: Fixed AST index invalidation causing duplicate/incorrect code block replacements
+  - Code blocks are now processed in descending index order
+  - Prevents index corruption when replacing nodes with multiple HTML elements
+  - Affects all versions since initial release
+
+### Technical Details
+
+- Sort code blocks by descending index before processing
+
 ## [0.3.1] - 2025-01-12
 
 ### Fixed
@@ -12,17 +25,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Critical**: Fixed language loading by marking `shiki` as external dependency
   - Resolved "Cannot find module 'javascript-\*.mjs'" errors at runtime
   - Dynamic language imports now work correctly from user's node_modules
-  - Reduced bundle size to 3.82 KB (ESM)
-- **Critical**: Fixed AST index invalidation causing duplicate/incorrect code block replacements
-  - Code blocks are now processed in descending index order
-  - Prevents index corruption when replacing nodes with multiple HTML elements
+  - Reduced bundle size to 3.77 KB (ESM)
 
 ### Technical Details
 
 - Added `tsup.config.ts` to configure bundler externals
 - Updated build scripts to use config file
 - Prevents inlining of Shiki language grammars
-- Sort code blocks by descending index before processing
 
 ## [0.3.0] - 2025-01-12
 
