@@ -64,6 +64,7 @@
     "@types/mdast": "^4.0.0",
     "@types/node": "^24.10.0",
     "@types/unist": "^3.0.3",
+    "@vitest/coverage-v8": "^4.0.8",
     "@vitest/ui": "^4.0.7",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
