@@ -5,9 +5,8 @@
 import { visit } from 'unist-util-visit';
 import type { Root, Code } from 'mdast';
 import type { Parent } from 'unist';
-import { codeToHighlightHtml, loadCustomLanguage } from 'shiki-highlight-api';
+import { codeToHighlightHtml, loadCustomLanguage, type HighlightOptions, type BundledLanguage } from 'shiki-highlight-api';
 import { bundledLanguages } from 'shiki';
-import type { BundledLanguage } from 'shiki';
 
 let blockCounter = 0;
 const loadedLanguages = new Set<string>();
@@ -24,10 +23,71 @@ export interface RemarkHighlightApiOptions {
    * This function will be called once before processing any code blocks
    */
   loadLanguages?: () => Promise<void>;
+
+  /**
+   * Enable automatic line numbering for all code blocks
+   * @default false
+   */
+  lineNumbers?: boolean | { start?: number };
+}
+
+/**
+ * Parse meta string from code fence to extract transformer options
+ * Supports: {1,3,5-7} for highlighting, showLineNumbers, diff indicators
+ */
+function parseMetaString(meta: string | null | undefined): Partial<HighlightOptions> {
+  if (!meta) return {};
+
+  const options: Partial<HighlightOptions> = {};
+
+  // Parse line highlight syntax: {1,3,5-7}
+  const highlightMatch = meta.match(/\{([0-9,-]+)\}/);
+  if (highlightMatch) {
+    options.highlightLines = highlightMatch[1];
+  }
+
+  // Parse line numbers flag
+  if (meta.includes('showLineNumbers') || meta.includes('lineNumbers')) {
+    options.lineNumbers = true;
+
+    // Check for custom start: showLineNumbers:10
+    const startMatch = meta.match(/(?:showLineNumbers|lineNumbers):(\d+)/);
+    if (startMatch) {
+      options.lineNumbers = { start: parseInt(startMatch[1], 10) };
+    }
+  }
+
+  // Parse diff indicators: diff +1,3 -2,5
+  const diffAddMatch = meta.match(/\+([0-9,]+)/);
+  const diffRemoveMatch = meta.match(/-([0-9,]+)/);
+  if (diffAddMatch || diffRemoveMatch) {
+    options.diffLines = {};
+    if (diffAddMatch) {
+      options.diffLines.added = diffAddMatch[1].split(',').map((n) => parseInt(n.trim(), 10));
+    }
+    if (diffRemoveMatch) {
+      options.diffLines.removed = diffRemoveMatch[1].split(',').map((n) => parseInt(n.trim(), 10));
+    }
+  }
+
+  // Parse focus syntax: focus{2,3}
+  const focusMatch = meta.match(/focus\{([0-9,-]+)\}/);
+  if (focusMatch) {
+    const focusLines = focusMatch[1].split(',').flatMap((part) => {
+      if (part.includes('-')) {
+        const [start, end] = part.split('-').map((n) => parseInt(n.trim(), 10));
+        return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+      }
+      return [parseInt(part.trim(), 10)];
+    });
+    options.focusLines = focusLines;
+  }
+
+  return options;
 }
 
 export function remarkHighlightApi(options: RemarkHighlightApiOptions = {}) {
-  const { theme = 'dark-plus', loadLanguages } = options;
+  const { theme = 'dark-plus', loadLanguages, lineNumbers: globalLineNumbers } = options;
   let languagesLoaded = false;
 
   return async (tree: Root) => {
@@ -81,12 +141,19 @@ export function remarkHighlightApi(options: RemarkHighlightApiOptions = {}) {
       const code = node.value;
 
       try {
+        // Parse meta string for transformer options
+        const metaOptions = parseMetaString(node.meta);
+
         // Generate Highlight API version
         const blockId = `hl-${++blockCounter}`;
         const result = await codeToHighlightHtml(code, {
           lang,
           theme,
           blockId,
+          // Apply global line numbers if set and not overridden by meta
+          lineNumbers: metaOptions.lineNumbers ?? globalLineNumbers,
+          // Apply meta string options
+          ...metaOptions,
         });
 
         // Create HTML nodes to replace the code block
