@@ -123,6 +123,90 @@ export default defineConfig({
 
 The `loadLanguages` callback runs once before processing any code blocks.
 
+## Meta String Syntax
+
+You can add transformer features to individual code blocks using meta string syntax in your markdown code fences. All features from [shiki-highlight-api v1.0.0+](https://github.com/shiki-highlights/shiki-highlight-api) are supported.
+
+### Line Highlighting
+
+Highlight specific lines using curly braces with line numbers or ranges:
+
+````markdown
+```javascript {1,3}
+const a = 1;  // highlighted
+const b = 2;
+const c = 3;  // highlighted
+```
+
+```javascript {1-3}
+const a = 1;  // highlighted
+const b = 2;  // highlighted
+const c = 3;  // highlighted
+```
+
+```javascript {1,3-5,7}
+// Mix single lines and ranges
+```
+````
+
+### Line Numbers
+
+Display line numbers using `showLineNumbers` or `lineNumbers` flags:
+
+````markdown
+```javascript showLineNumbers
+const x = 1;  // Shows line 1
+const y = 2;  // Shows line 2
+```
+
+```javascript lineNumbers:10
+const x = 1;  // Shows line 10
+const y = 2;  // Shows line 11
+```
+````
+
+### Diff Indicators
+
+Show added and removed lines using `+` and `-` prefixes:
+
+````markdown
+```javascript +1,2 -4
+const a = 1;  // + added
+const b = 2;  // + added
+const c = 3;
+const d = 4;  // - removed
+```
+````
+
+### Focus Lines
+
+Focus specific lines while blurring others using `focus{}` syntax:
+
+````markdown
+```javascript focus{2,3}
+const a = 1;  // blurred
+const b = 2;  // focused
+const c = 3;  // focused
+const d = 4;  // blurred
+```
+
+```javascript focus{1-3}
+// Focus a range of lines
+```
+````
+
+### Combined Features
+
+You can combine multiple features in a single code block:
+
+````markdown
+```javascript {1,3} showLineNumbers:10 +1 focus{1-2}
+const a = 1;  // line 10, highlighted, added, focused
+const b = 2;  // line 11, focused
+const c = 3;  // line 12, highlighted, blurred
+```
+````
+
 ## Options
 
 ```typescript
@@ -134,12 +218,55 @@ interface RemarkHighlightApiOptions {
   theme?: string;
 
   /**
+   * Enable line numbers globally for all code blocks
+   * Can be overridden per-block using meta string syntax
+   * @default false
+   */
+  lineNumbers?: boolean | { start: number };
+
+  /**
    * Optional function to load custom languages before processing
    * This function will be called once before processing any code blocks
    */
   loadLanguages?: () => Promise<void>;
 }
 ```
+
+### Global Line Numbers
+
+You can enable line numbers globally for all code blocks:
+
+```javascript
+export default defineConfig({
+  markdown: {
+    remarkPlugins: [
+      [
+        remarkHighlightApi,
+        {
+          theme: 'dark-plus',
+          lineNumbers: true, // All blocks show line numbers
+        },
+      ],
+    ],
+    syntaxHighlight: false,
+  },
+});
+```
+
+Or set a custom starting line number:
+
+```javascript
+remarkPlugins: [
+  [
+    remarkHighlightApi,
+    {
+      lineNumbers: { start: 100 },
+    },
+  ],
+];
+```
+
+Individual code blocks can override the global setting using meta string syntax.
 
 ## Browser Support
 
