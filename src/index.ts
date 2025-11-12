@@ -140,6 +140,10 @@ export function remarkHighlightApi(options: RemarkHighlightApiOptions = {}) {
       }
     });
 
+    // Sort in descending order by index to prevent index invalidation
+    // when replacing nodes (higher indices processed first)
+    codeBlocks.sort((a, b) => b.index - a.index);
+
     // Process all code blocks
     for (const { node, index, parent } of codeBlocks) {
       const lang = node.lang || 'text';
