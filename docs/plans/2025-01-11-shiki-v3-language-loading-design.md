@@ -34,8 +34,8 @@ Languages load in this order:
 **shiki-highlight-api** exports two new functions:
 
 ```typescript
-export async function getHighlighterInstance(): Promise<Highlighter>
-export async function loadLanguage(langImport: LanguageInput): Promise<void>
+export async function getHighlighterInstance(): Promise<Highlighter>;
+export async function loadLanguage(langImport: LanguageInput): Promise<void>;
 ```
 
 **remark-shiki-highlight-api** adds lazy loading logic:

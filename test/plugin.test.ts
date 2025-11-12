@@ -237,7 +237,7 @@ fn main() {}
     // Mock the shiki-highlight-api to throw
     vi.doMock('shiki-highlight-api', () => ({
       codeToHighlightHtml: vi.fn().mockRejectedValue(new Error('Processing failed')),
-      loadCustomLanguage: vi.fn()
+      loadCustomLanguage: vi.fn(),
     }));
 
     vi.resetModules();

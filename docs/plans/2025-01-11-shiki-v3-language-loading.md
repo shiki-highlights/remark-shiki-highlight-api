@@ -13,13 +13,14 @@
 ## Task 1: Add language loading test for Python
 
 **Files:**
+
 - Modify: `test/plugin.test.ts`
 
 **Step 1: Write failing test for Python code block**
 
 Add this test to `test/plugin.test.ts` after the existing tests:
 
-```typescript
+````typescript
 it('processes Python code blocks', async () => {
   const markdown = '```python\ndef hello():\n    print("world")\n```';
 
@@ -38,7 +39,7 @@ it('processes Python code blocks', async () => {
   expect(html).toContain('<style');
   expect(html).toContain('::highlight(');
 });
-```
+````
 
 **Step 2: Run test to verify it fails**
 
@@ -57,6 +58,7 @@ git commit -m "test: add Python code block test"
 ## Task 2: Export language loading functions from shiki-highlight-api
 
 **Files:**
+
 - Modify: `node_modules/shiki-highlight-api/dist/index.d.ts` (for reference)
 - Note: This package is external, so we'll work around it in remark-shiki-highlight-api
 
@@ -73,6 +75,7 @@ Note: Since shiki-highlight-api is an external package, we'll create our own hig
 ## Task 3: Implement lazy language loading in remark-shiki-highlight-api
 
 **Files:**
+
 - Modify: `src/index.ts:26-84`
 
 **Step 1: Import Shiki dependencies**
@@ -218,13 +221,14 @@ Manages separate highlighter instance to pre-load languages before processing."
 ## Task 4: Add tests for additional languages
 
 **Files:**
+
 - Modify: `test/plugin.test.ts`
 
 **Step 1: Add Rust test**
 
 Add after the Python test:
 
-```typescript
+````typescript
 it('processes Rust code blocks', async () => {
   const markdown = '```rust\nfn main() {\n    println!("Hello");\n}\n```';
 
@@ -241,11 +245,11 @@ it('processes Rust code blocks', async () => {
   expect(html).toContain('println!');
   expect(html).toContain('<style');
 });
-```
+````
 
 **Step 2: Add Go test**
 
-```typescript
+````typescript
 it('processes Go code blocks', async () => {
   const markdown = '```go\nfunc main() {\n    fmt.Println("Hello")\n}\n```';
 
@@ -262,7 +266,7 @@ it('processes Go code blocks', async () => {
   expect(html).toContain('fmt.Println');
   expect(html).toContain('<style');
 });
-```
+````
 
 **Step 3: Add multi-language test**
 
@@ -316,13 +320,14 @@ git commit -m "test: add multi-language support tests"
 ## Task 5: Update README documentation
 
 **Files:**
+
 - Modify: `README.md:52-91`
 
 **Step 1: Update "With Custom Languages" section**
 
 Replace lines 52-91 in README.md with:
 
-```markdown
+````markdown
 ### Automatic Language Loading
 
 All Shiki bundled languages load automatically when detected in your markdown. No configuration needed for common languages like Python, Rust, Go, PHP, Ruby, etc.
@@ -338,6 +343,7 @@ export default defineConfig({
   },
 });
 ```
+````
 
 Then in your markdown:
 
@@ -395,20 +401,22 @@ export default defineConfig({
 ```
 
 The `loadLanguages` callback runs once before processing any code blocks.
-```
+
+````
 
 **Step 2: Commit documentation**
 
 ```bash
 git add README.md
 git commit -m "docs: update README for automatic language loading"
-```
+````
 
 ---
 
 ## Task 6: Clean up test file
 
 **Files:**
+
 - Delete: `test-python.mjs`
 
 **Step 1: Remove temporary test file**
@@ -428,6 +436,7 @@ git commit -m "chore: remove temporary test file"
 ## Task 7: Run full test suite and build
 
 **Files:**
+
 - None (verification only)
 
 **Step 1: Run complete test suite**
@@ -449,12 +458,12 @@ Expected: No linting errors
 
 Create a test markdown file:
 
-```bash
+````bash
 echo '```python
 def test():
     return 42
 ```' > test.md
-```
+````
 
 Process it (would need a test script, but we verified via tests already).
 
@@ -463,6 +472,7 @@ Process it (would need a test script, but we verified via tests already).
 ## Task 8: Final verification and summary
 
 **Files:**
+
 - None (verification only)
 
 **Step 1: Review changes**
@@ -478,6 +488,7 @@ Expected: Clean working tree
 **Step 3: Summary**
 
 Implementation complete:
+
 - ✅ Lazy language loading for all bundled languages
 - ✅ Backwards compatible with loadLanguages callback
 - ✅ Tests for Python, Rust, Go, multi-language documents
@@ -485,6 +496,7 @@ Implementation complete:
 - ✅ All tests passing
 
 **Next steps:**
+
 1. Test in a real project with various languages
 2. Consider publishing updated version
 3. Update shiki-highlight-api dependency version if newer version available
