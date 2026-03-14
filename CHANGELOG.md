@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-03-14
+
+### Changed
+
+- **Shiki 4 support**: Bumped `shiki` dependency from `^3.14.0` to `^4.0.0`
+- Version bump to 0.4.0 (minor, since the shiki major version change may affect consumers)
+- All 54 tests pass with zero code changes — Shiki 4 only removed typo'd API names we never used
+
 ## [0.3.6] - 2025-11-13
 
 ### Changed
