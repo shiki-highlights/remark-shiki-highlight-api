@@ -57,7 +57,7 @@
     "prepublishOnly": "npm run build && npm test"
   },
   "dependencies": {
-    "shiki": "^3.14.0",
+    "shiki": "^4.0.2",
     "shiki-highlight-api": "^1.0.5",
     "unist-util-visit": "^5.0.0"
   },
