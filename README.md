@@ -16,6 +16,8 @@ Built on top of [shiki-highlight-api](https://github.com/shiki-highlights/shiki-
 
 ## Installation
 
+Requires Node.js 24 or newer.
+
 ```bash
 npm install remark-shiki-highlight-api shiki-highlight-api shiki
 ```
