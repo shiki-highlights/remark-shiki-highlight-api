@@ -35,6 +35,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Verify packed package interfaces
+        run: npm run test:package
+
   lint:
     runs-on: ubuntu-latest
 
